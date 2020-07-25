@@ -1,31 +1,42 @@
 "=============================Plugin Setup========================================================
 call plug#begin('~/AppData/Local/nvim/plugged')
 
-"==Successfully added plugins and configured==
+"function
+Plug 'neoclide/coc.nvim', {'branch': 'release'}			" Autocomplete
+Plug 'easymotion/vim-easymotion'						" Quick find
+Plug 'tpope/vim-fugitive'								" Git handler
+Plug 'scrooloose/nerdtree'								" File View tree
+Plug 'vim-airline/vim-airline'							" status bar
+Plug 'tpope/vim-surround'								" quotes and things
+Plug 'Yggdroot/indentLine'								" shows indents
+Plug 'vim-syntastic/syntastic'							" Syntax markup
 
-"Autocomplete
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Quick find
-Plug 'easymotion/vim-easymotion'
-"Git handler
-Plug 'tpope/vim-fugitive'
-"File View tree
-Plug 'scrooloose/nerdtree'
-" coloring
-Plug 'dracula/vim', { 'commit': '147f389f4275cec4ef43ebc25e2011c57b45cc00' }
-" tab manager
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+"asetetic
+Plug 'ryanoasis/vim-devicons'                           " powerline like icons for NERDTree
+Plug 'junegunn/rainbow_parentheses.vim'                 " rainbow paranthesis
+Plug 'hzchirs/vim-material'                             " material color themes
+Plug 'junegunn/goyo.vim'                                " zen mode
+Plug 'amix/vim-zenroom2'                                " more focus in zen mode
 
-"don't know yet
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-surround'
-Plug 'majutsushi/tagbar'
-Plug 'scrooloose/nerdcommenter'
+"language support
+Plug 'sheerun/vim-polyglot'                             " many languages support
+Plug 'tpope/vim-liquid'                                 " liquid language support
+
+"Misc
+Plug 'mhinz/vim-startify'                               " cool start up screen
+Plug 'Chiel92/vim-autoformat'                           " an actually good and light auto formatter
+Plug 'tpope/vim-commentary'                             " better commenting
+
+"Latex Editor
+Plug 'lervag/vimtex'
+Plug 'Konfekt/FastFold'
+Plug 'matze/vim-tex-fold'
+Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 
 
 "==Plugins that is broken due to config==
-Plug 'liuchengxu/vim-which-key'
+Plug 'liuchengxu/vim-which-key'							" in editor cheat sheet
+
 
 call plug#end()
 
@@ -38,14 +49,51 @@ set timeoutlen=300
 
 "coloring
 syntax on
-color dracula
 highlight Pmenu guibg=white guifg=black gui=bold
 highlight Comment gui=bold
 highlight Normal gui=none
 highlight NonText guibg=none
+let g:material_style='oceanic'
+set background=dark
+colorscheme vim-material
+let g:airline_theme='material'
+highlight Pmenu guibg=white guifg=black gui=bold
+highlight Comment gui=bold
+highlight Normal gui=none
+highlight NonText guibg=none
+autocmd ColorScheme * highlight VertSplit cterm=NONE ctermfg=Green ctermbg=NONE
 
 " Opaque Background (Comment out to use terminal's profile)
 set termguicolors
+
+"number and other things
+set number
+set title
+
+"sets wrap mode
+set tw=200                                     		    " auto wrap lines that are longer than that
+
+"sets jf to ctrl mode instead of escape
+inoremap jf <Esc>
+
+"Clipboard and mouse scrolling
+set mouse=a                                             " enable mouse scrolling
+set clipboard+=unnamedplus                              " use system clipboard by default
+
+
+
+"tabs
+set expandtab smarttab autoindent             			" tab key actions
+
+
+"=============================Latex===============================================================
+let g:tex_flavor  = 'latex'
+let g:tex_conceal = ''
+let g:vimtex_fold_manual = 1
+let g:vimtex_latexmk_continuous = 1
+let g:vimtex_compiler_progname = 'nvr'
+" use SumatraPDF if you are on Windows
+let g:vimtex_view_method = 'skim'
 
 "=============================Which Key===========================================================
 
@@ -67,8 +115,8 @@ let g:which_key_map['_'] = { 'a': 'which_key_ignore' }
 
 let g:which_key_map = {
       \ 'name' : '+buffer' ,
-      \ 't' : ['t1'        , 'test']        ,
-      \ 'y' : ['t2'        , 'test2']        ,
+      \ 'jf' : ['jf'        , 'Control Mode']        ,
+      \ 'i' : ['i'        , 'Insert Mode']        ,
 	  \}
 
 let g:which_key_map.b = {
@@ -85,6 +133,15 @@ let g:which_key_map.b = {
       \ }
 
 
+	  
+	  
+"==============================syntastic==========================================================
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+
 "=============================Easy Motion=========================================================
 
 
@@ -92,45 +149,8 @@ let g:which_key_map.b = {
 nmap f <Plug>(easymotion-overwin-f2)
 
 
-"=============================Nerd Tree===========================================================
-"boxes are actually arrows in case the text editor can't see them properly
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+"=============================FZF================================================================
 
-map <C-n> :NERDTreeToggle<CR>
-
-let NERDTreeShowHidden=1
-let g:NERDTreeDirArrowExpandable = '↠'
-let g:NERDTreeDirArrowCollapsible = '↡'
-
-
-"=============================Nerd Commentor=======================================================
-
-" Add spaces after comment delimiters by default
-let g:NERDSpaceDelims = 1
-
-" Use compact syntax for prettified multi-line comments
-let g:NERDCompactSexyComs = 1
-
-" Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDDefaultAlign = 'left'
-
-" Set a language to use its alternate delimiters by default
-let g:NERDAltDelims_java = 1
-
-" Add your own custom formats or override the defaults
-let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
-
-" Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDCommentEmptyLines = 1
-
-" Enable trimming of trailing whitespace when uncommenting
-let g:NERDTrimTrailingWhitespace = 1
-
-" Enable NERDCommenterToggle to check all selected lines is commented or not 
-let g:NERDToggleCheckAllLines = 1
-
-"=============================fxm=================================================================
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-s': 'split',
@@ -149,6 +169,19 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
+
+
+"=============================Nerd Tree===========================================================
+"boxes are actually arrows in case the text editor can't see them properly
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+map <C-n> :NERDTreeToggle<CR>
+
+let NERDTreeShowHidden=1
+let g:NERDTreeDirArrowExpandable = '->'
+let g:NERDTreeDirArrowCollapsible = '<-'
+
 
 "=============================Autocomplete=========================================================
 " TextEdit might fail if hidden is not set.
