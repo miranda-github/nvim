@@ -24,7 +24,8 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 	Plug 'tpope/vim-dispatch'
     " Autocomplete
     Plug 'neoclide/coc.nvim', {'branch': 'release'}    
-
+    "Ros plugin stuff
+    Plug 'taketwo/vim-ros'
     
 call plug#end()
 
