@@ -1,2 +1,2 @@
 # nvim
-nvim configuration for linux and windows for easy use and cross platform consistency!
+Nvim config for use with headless platforms and for development within Robot Operating System
